@@ -50,10 +50,13 @@ def book_earliest_tee_time():
     print("Updated search date:", driver.execute_script("return document.getElementById('begindate').value"))
 
     # Click the Search button to update the results
-    search_button = driver.find_element(By.ID, "grwebsearch_buttonsearch")  # Replace with the actual ID or locator
+    # Then click the search button to reload results
+    search_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "grwebsearch_buttonsearch"))
+    )
     search_button.click()
 
-    # Wait for results to reload
+    # Wait for new table rows to load
     WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.CSS_SELECTOR, "#grwebsearch_output_table tbody tr"))
     )
