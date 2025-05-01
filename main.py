@@ -8,9 +8,10 @@ import time
 
 # ---------- CONFIG ----------
 URL = "https://txaustinweb.myvscloud.com/webtrac/web/search.html?display=detail&module=GR&secondarycode=3"
+#URL = "https://txaustinweb.myvscloud.com/webtrac/web/search.html"
 SLOT_TEXT_KEYWORD = "Open"
 MIN_SLOTS = 4
-HEADLESS = False  # Change to True to run in headless mode
+HEADLESS = True  # Change to True to run in headless mode
 
 # ---------- SETUP ----------
 def get_upcoming_saturday():
@@ -49,12 +50,15 @@ def book_earliest_tee_time():
 
     print("Updated search date:", driver.execute_script("return document.getElementById('begindate').value"))
 
-    # Click the Search button to update the results
-    # Then click the search button to reload results
-    search_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, "grwebsearch_buttonsearch"))
+
+    WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.ID, "grwebsearch_buttonsearch"))
     )
+    search_button = driver.find_element(By.ID, "grwebsearch_buttonsearch")
     search_button.click()
+    print(f"search button clicked!")
+
+    time.sleep(5)
 
     # Wait for new table rows to load
     WebDriverWait(driver, 10).until(
@@ -65,9 +69,6 @@ def book_earliest_tee_time():
     #tee_times = driver.find_elements(By.CSS_SELECTOR, ".detailListRow")  # May vary based on DOM
 
 ###############
-    WebDriverWait(driver, 10).until(
-    EC.presence_of_all_elements_located((By.CSS_SELECTOR, "#grwebsearch_output_table tbody tr"))
-)
 
     rows = driver.find_elements(By.CSS_SELECTOR, "#grwebsearch_output_table tbody tr")
 
